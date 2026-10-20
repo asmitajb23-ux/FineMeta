@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Police Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>पोलीस अ‍ॅडमिन डॅशबोर्ड</h2>
+        <a href="/logout" class="btn btn-danger">लॉगआउट</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped bg-white shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Complaint ID</th>
+                    <th>नागरिकाचे नाव</th>
+                    <th>गाडी व चालान नंबर</th>
+                    <th>तक्रारीचे कारण</th>
+                    <th>पुरावा (Evidence)</th>
+                    <th>सध्याचे स्टेटस</th>
+                    <th>निर्णय घ्या (Action)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in complaints %}
+                <tr>
+                    <td>{{ c.complaint_id }}</td>
+                    <td>{{ c.name }} <br><small>{{ c.phone }}</small></td>
+                    <td>{{ c.vehicle_no }} <br><small>Challan: {{ c.challan_no }}</small></td>
+                    <td>{{ c.reason }}</td>
+                    <td>
+                        {% if c.evidence %}
+                        <a href="/static/uploads/{{ c.evidence }}" target="_blank">पुरावा पाहा</a>
+                        {% else %}
+                        पुरावा नाही
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {% if c.status == 'Approved' %}bg-success{% elif c.status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                            {{ c.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <form action="/police/update/{{ c.id }}" method="POST">
+                            <select name="status" class="form-select form-select-sm mb-1">
+                                <option value="Approved">Approve (दंड रद्द)</option>
+                                <option value="Rejected">Reject (फेटाळा)</option>
+                            </select>
+                            <input type="text" name="remark" placeholder="शेरा लिहा..." class="form-control form-control-sm mb-1" required>
+                            <button type="submit" class="btn btn-sm btn-primary w-100">अपडेट करा</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

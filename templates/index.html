@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Traffic Fine Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container d-flex justify-content-between">
+    <a class="navbar-brand text-white text-decoration-none" href="/">Traffic Police Portal</a>
+    <div>
+      <a class="btn btn-outline-light me-2" href="/complaint">तक्रार करा</a>
+      <a class="btn btn-outline-warning me-2" href="/track">स्टेटस पाहा</a>
+      <a class="btn btn-primary" href="/login">पोलीस लॉगिन</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">ट्रॅफिक दंड कॅल्क्युलेटर</h2>
+    <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="mb-3">
+            <label>गाडीचा प्रकार निवडा:</label>
+            <select id="vehicle" class="form-select">
+                <option value="2w">2-Wheeler (दुचाकी)</option>
+                <option value="4w">4-Wheeler (कार/चारचाकी)</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>नियम मोडला (Rule Broken):</label>
+            <select id="rule" class="form-select">
+                <option value="helmet">हेल्मेट न घालणे (No Helmet)</option>
+                <option value="seatbelt">सीटबेल्ट न लावणे (No Seatbelt)</option>
+                <option value="signal">सिग्नल तोडणे (Red Light Jump)</option>
+                <option value="overspeed">ओव्हर स्पीडिंग (Over Speeding)</option>
+            </select>
+        </div>
+        <button onclick="calculateFine()" class="btn btn-success w-100">दंड तपासा</button>
+        <h3 id="result" class="text-center text-danger mt-3"></h3>
+    </div>
+</div>
+
+<script>
+function calculateFine() {
+    let vehicle = document.getElementById("vehicle").value;
+    let rule = document.getElementById("rule").value;
+    let fine = 0;
+
+    if (rule === "helmet") {
+        fine = (vehicle === "2w") ? 500 : 0;
+    } else if (rule === "seatbelt") {
+        fine = (vehicle === "4w") ? 1000 : 0;
+    } else if (rule === "signal") {
+        fine = (vehicle === "2w") ? 500 : 1000;
+    } else if (rule === "overspeed") {
+        fine = (vehicle === "2w") ? 1000 : 2000;
+    }
+
+    if (fine === 0) {
+        document.getElementById("result").innerText = "हा नियम या गाडीसाठी लागू नाही.";
+    } else {
+        document.getElementById("result").innerText = "एकूण दंड: ₹" + fine;
+    }
+}
+</script>
+</body>
+</html>
